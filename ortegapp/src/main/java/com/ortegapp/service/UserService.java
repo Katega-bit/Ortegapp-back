@@ -1,5 +1,6 @@
 package com.ortegapp.service;
 
+import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.UserRole;
 import com.ortegapp.model.dto.user.CreateUserRequest;
@@ -92,5 +93,6 @@ public class UserService {
     public boolean passwordMatch(User user, String clearPassword) {
         return passwordEncoder.matches(clearPassword, user.getPassword());
     }
+
 
 }

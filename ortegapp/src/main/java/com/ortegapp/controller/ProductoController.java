@@ -56,4 +56,10 @@ public class ProductoController {
     public ProductoResponse editProducto(@PathVariable Long id, @RequestBody EditProducto editProducto){
             return ProductoResponse.toProductoResponse(productoService.edit(id, editProducto));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProducto(@PathVariable Long id){
+        productoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
