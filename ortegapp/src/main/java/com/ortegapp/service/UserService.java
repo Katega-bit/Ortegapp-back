@@ -2,7 +2,7 @@ package com.ortegapp.service;
 
 import com.ortegapp.model.User;
 import com.ortegapp.model.UserRole;
-import com.ortegapp.model.dto.CreateUserRequest;
+import com.ortegapp.model.dto.user.CreateUserRequest;
 import com.ortegapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 

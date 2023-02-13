@@ -1,4 +1,4 @@
-package com.ortegapp.model.dto;
+package com.ortegapp.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ortegapp.model.User;

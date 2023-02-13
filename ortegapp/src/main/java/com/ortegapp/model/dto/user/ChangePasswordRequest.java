@@ -1,4 +1,4 @@
-package com.ortegapp.model.dto;
+package com.ortegapp.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

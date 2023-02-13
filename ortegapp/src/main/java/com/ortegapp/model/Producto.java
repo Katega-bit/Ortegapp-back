@@ -22,7 +22,8 @@ public class Producto {
     private Long id;
 
     private String nombre;
-    private String descrpcion;
+    private String tipo;
+    private String descripcion;
     private double precio;
     @JoinTable(
             name = "rel_producto_user",

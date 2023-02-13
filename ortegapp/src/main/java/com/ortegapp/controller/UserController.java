@@ -1,7 +1,7 @@
 package com.ortegapp.controller;
 
 import com.ortegapp.model.User;
-import com.ortegapp.model.dto.*;
+import com.ortegapp.model.dto.user.*;
 import com.ortegapp.security.jwt.access.JwtProvider;
 import com.ortegapp.security.jwt.refresh.RefreshToken;
 import com.ortegapp.security.jwt.refresh.RefreshTokenException;

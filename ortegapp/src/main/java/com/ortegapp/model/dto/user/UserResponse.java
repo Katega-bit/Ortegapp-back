@@ -1,13 +1,11 @@
-package com.ortegapp.model.dto;
+package com.ortegapp.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ortegapp.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import net.bytebuddy.implementation.bind.annotation.Super;
 
 
 import java.time.LocalDateTime;
