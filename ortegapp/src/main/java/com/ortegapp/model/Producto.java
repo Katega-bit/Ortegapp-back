@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,8 +31,8 @@ public class Producto {
             joinColumns = @JoinColumn(name = "FK_PRODUCT", nullable = false),
             inverseJoinColumns = @JoinColumn(name="FK_USER", nullable = false)
     )
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<User> likes;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<User> likes = new HashSet<>();
     @OneToMany
     private List<Comentario> comentarios;
 }

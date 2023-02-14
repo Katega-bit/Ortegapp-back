@@ -7,6 +7,7 @@ import com.ortegapp.model.dto.producto.EditProducto;
 import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.service.ProductoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -68,7 +69,7 @@ public class ProductoController {
     }
 
     @PostMapping("/like/{id}")
-    public ResponseEntity<Optional<Producto>> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
-        return  ResponseEntity.ok(productoService.like(id, user));
+    public ResponseEntity<Producto> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
+        return  ResponseEntity.status(HttpStatus.CREATED).body(productoService.like(id, user).get());
     }
 }
