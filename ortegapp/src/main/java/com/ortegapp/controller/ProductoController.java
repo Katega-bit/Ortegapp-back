@@ -1,12 +1,14 @@
 package com.ortegapp.controller;
 
 import com.ortegapp.model.Producto;
+import com.ortegapp.model.User;
 import com.ortegapp.model.dto.producto.CreateProduct;
 import com.ortegapp.model.dto.producto.EditProducto;
 import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.service.ProductoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -14,6 +16,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @RequestMapping("/producto")
 @RestController
 @RequiredArgsConstructor
@@ -61,5 +65,10 @@ public class ProductoController {
     public ResponseEntity<?> deleteProducto(@PathVariable Long id){
         productoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/like/{id}")
+    public ResponseEntity<Optional<Producto>> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
+        return  ResponseEntity.ok(productoService.like(id, user));
     }
 }
