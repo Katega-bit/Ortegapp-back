@@ -17,11 +17,11 @@ import javax.persistence.*;
 public class Comentario {
     @Id@GeneratedValue
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "producto_id")
     private Producto producto;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String texto;
+    private String mensaje;
 }

@@ -1,10 +1,9 @@
 package com.ortegapp.controller;
 
-import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.dto.comentario.CreateComentario;
-import com.ortegapp.service.ComentarioService;
+import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.service.ProductoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +19,10 @@ import java.net.URI;
 public class ComentarioController {
 
     private final ProductoService productoService;
-    private final ComentarioService comentarioService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<Comentario> postComentario(@PathVariable Long id, @RequestBody CreateComentario createComentario, @AuthenticationPrincipal User user){
-        productoService.comentario(id ,CreateComentario.toComentario(createComentario), user);
-        Comentario nuevo = comentarioService.save(createComentario);
+    public ResponseEntity<ProductoResponse> postComentario(@PathVariable Long id, @RequestBody CreateComentario createComentario, @AuthenticationPrincipal User user){
+        Producto nuevo = productoService.comentario(id, createComentario, user);
 
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -35,6 +32,6 @@ public class ComentarioController {
 
         return ResponseEntity
                 .created(createdURI)
-                .body(nuevo);
+                .body(ProductoResponse.toProductoResponse(nuevo));
     }
 }

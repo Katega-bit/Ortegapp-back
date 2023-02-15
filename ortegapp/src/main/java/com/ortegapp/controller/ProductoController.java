@@ -42,7 +42,7 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<Producto> newProducto(@Valid @RequestBody CreateProduct createProduct){
+    public ResponseEntity<ProductoResponse> newProducto(@Valid @RequestBody CreateProduct createProduct){
         Producto nuevo = productoService.save(createProduct);
 
         URI createdURI = ServletUriComponentsBuilder
@@ -53,7 +53,7 @@ public class ProductoController {
 
         return ResponseEntity
                 .created(createdURI)
-                .body(nuevo);
+                .body(ProductoResponse.toProductoResponse(nuevo));
 
     }
 
