@@ -1,19 +1,26 @@
 package com.ortegapp.service;
 
+import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
+import com.ortegapp.model.User;
 import com.ortegapp.model.dto.producto.CreateProduct;
 import com.ortegapp.model.dto.producto.EditProducto;
+import com.ortegapp.repository.ComentarioRepository;
 import com.ortegapp.repository.ProductoRepository;
+import com.ortegapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductoService {
     private final ProductoRepository productoRepository;
+    private final UserRepository userRepository;
+    private final ComentarioRepository comentarioRepository;
 
     public List<Producto> findAll(){
         List<Producto> result= productoRepository.findAll();
@@ -49,8 +56,32 @@ public class ProductoService {
 
     }
 
+    public Optional<Producto> like(Long id, User user){
 
 
+        if (productoRepository.existsById(id)) {
 
+            productoRepository.findById(id).get().getLikes().add(user);
+            productoRepository.save(productoRepository.findById(id).get());
+            userRepository.findById(user.getId()).get().getLikes().add(productoRepository.findById(id).get());
+            userRepository.save(user);
+            return productoRepository.findById(id);
+        }
+
+        return Optional.empty();
+
+    }
+
+    public Optional<Producto> comentario(Long id, Comentario comentario, User user){
+        if (productoRepository.existsById(id)){
+            productoRepository.findById(id).get().getComentarios().add(comentario);
+            comentario.setUser(user);
+            comentarioRepository.save(comentario);
+            productoRepository.save(productoRepository.findById(id).get());
+            return productoRepository.findById(id);
+        }
+        return Optional.empty();
+
+    }
 
 }

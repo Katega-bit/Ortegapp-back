@@ -56,8 +56,8 @@ public class User implements UserDetails {
 
     private String fullName;
 
-    @ManyToMany
-    private Set<Producto> likes;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Producto> likes = new HashSet<>();
 
     @Builder.Default
     private boolean accountNonExpired = true;

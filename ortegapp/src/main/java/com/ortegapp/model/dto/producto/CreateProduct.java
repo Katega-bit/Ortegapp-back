@@ -1,6 +1,7 @@
 package com.ortegapp.model.dto.producto;
 
 import com.ortegapp.model.Producto;
+import com.ortegapp.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,12 +27,16 @@ public class CreateProduct {
     @Min(value = 0)
     private double precio;
 
+    private Set<User> likes;
+
+
     public static Producto toProducto(CreateProduct editProducto){
         return Producto.builder()
                 .nombre(editProducto.nombre)
                 .tipo(editProducto.tipo)
                 .descripcion(editProducto.descripcion)
                 .precio(editProducto.precio)
+                .likes(editProducto.likes)
                 .build();
     }
 }
