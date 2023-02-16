@@ -31,6 +31,22 @@ public class ProductoService {
         return result;
     }
 
+    public List<Comentario> findAllComentarios() {
+        List<Comentario> result = comentarioRepository.findAll();
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException("Comentarios no encontrados");
+        }
+        return result;
+    }
+
+    public Comentario findByIdComentario(Long idComent, Long idProd){
+        if (productoRepository.existsById(idProd) && comentarioRepository.findById(idComent).get().getProducto().getId() == idProd){
+            return comentarioRepository.findById(idComent).get();
+        }
+
+        return null;
+
+    }
     public Producto findById(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No hay producto con id: " + id));

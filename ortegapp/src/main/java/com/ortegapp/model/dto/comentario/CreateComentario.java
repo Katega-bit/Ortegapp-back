@@ -20,9 +20,9 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 public class CreateComentario {
 
-
     @NotEmpty
     private String texto;
+
 
 
 }

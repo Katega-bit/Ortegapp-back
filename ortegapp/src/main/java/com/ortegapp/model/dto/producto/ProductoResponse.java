@@ -20,6 +20,7 @@ import java.util.Set;
 @Builder
 public class ProductoResponse {
 
+    private Long id;
     @NotEmpty
     private String nombre;
 
@@ -38,6 +39,7 @@ public class ProductoResponse {
 
     public static ProductoResponse toProductoResponse(Producto producto){
         return ProductoResponse.builder()
+                .id(producto.getId())
                 .nombre(producto.getNombre())
                 .foto(producto.getFoto())
                 .tipo(producto.getTipo())

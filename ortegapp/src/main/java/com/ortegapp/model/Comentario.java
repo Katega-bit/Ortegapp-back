@@ -1,5 +1,6 @@
 package com.ortegapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Comentario {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "producto_id")
+    @JsonIgnore
     private Producto producto;
     @ManyToOne
     @JoinColumn(name = "user_id")
