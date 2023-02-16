@@ -19,15 +19,15 @@ import java.util.Set;
 @Builder
 public class CreateProduct {
 
-    @NotEmpty
+    @NotEmpty(message = "{product.nombre.empty}")
     private String nombre;
-    @NotEmpty
+    @NotEmpty(message = "{product.tipo.empty}")
     private String tipo;
 
-    @URL
+    @URL(message = "{product.foto.url}")
     private String foto;
 
-    @NotEmpty
+    @NotEmpty(message = "{product.descripcion.empty}")
     private String descripcion;
     @Min(value = 0)
     private double precio;
@@ -37,12 +37,12 @@ public class CreateProduct {
 
     public static Producto toProducto(CreateProduct editProducto){
         return Producto.builder()
-                .nombre(editProducto.nombre)
+                .nombre(editProducto.getNombre())
                 .foto(editProducto.getFoto())
-                .tipo(editProducto.tipo)
-                .descripcion(editProducto.descripcion)
-                .precio(editProducto.precio)
-                .likes(editProducto.likes)
+                .tipo(editProducto.getTipo())
+                .descripcion(editProducto.getDescripcion())
+                .precio(editProducto.getPrecio())
+                .likes(editProducto.getLikes())
                 .build();
     }
 }

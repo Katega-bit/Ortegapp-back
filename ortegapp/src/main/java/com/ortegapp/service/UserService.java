@@ -98,5 +98,8 @@ public class UserService {
         return userRepository.existsByUsername(username);
     }
 
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);}
+
 
 }
