@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -22,6 +23,10 @@ public class CreateProduct {
     private String nombre;
     @NotEmpty
     private String tipo;
+
+    @URL
+    private String foto;
+
     @NotEmpty
     private String descripcion;
     @Min(value = 0)
@@ -33,6 +38,7 @@ public class CreateProduct {
     public static Producto toProducto(CreateProduct editProducto){
         return Producto.builder()
                 .nombre(editProducto.nombre)
+                .foto(editProducto.getFoto())
                 .tipo(editProducto.tipo)
                 .descripcion(editProducto.descripcion)
                 .precio(editProducto.precio)

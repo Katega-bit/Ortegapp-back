@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ public class Producto {
     private Long id;
 
     private String nombre;
+    private String foto;
     private String tipo;
     private String descripcion;
     private double precio;
@@ -34,5 +36,5 @@ public class Producto {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<User> likes = new HashSet<>();
     @OneToMany
-    private List<Comentario> comentarios;
+    private List<Comentario> comentarios = new ArrayList<>();
 }

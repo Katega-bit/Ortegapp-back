@@ -13,6 +13,8 @@ public class CreateUserRequest {
 
     private String username;
     private String password;
+    private String email;
+    private String telefono;
     private String verifyPassword;
     private String avatar;
     private String fullName;

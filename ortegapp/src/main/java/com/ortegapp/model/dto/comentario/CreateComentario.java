@@ -20,20 +20,9 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 public class CreateComentario {
 
-
-    @NotEmpty
-    private Producto producto;
-    @NotEmpty
-    private User user;
     @NotEmpty
     private String texto;
 
-    public static Comentario toComentario(CreateComentario createComentario){
-        return Comentario.builder()
-                .producto(createComentario.producto)
-                .user(createComentario.user)
-                .texto(createComentario.texto)
-                .build();
 
-    }
+
 }

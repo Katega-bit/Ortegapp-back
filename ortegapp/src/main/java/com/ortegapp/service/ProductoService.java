@@ -3,6 +3,7 @@ package com.ortegapp.service;
 import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.comentario.CreateComentario;
 import com.ortegapp.model.dto.producto.CreateProduct;
 import com.ortegapp.model.dto.producto.EditProducto;
 import com.ortegapp.repository.ComentarioRepository;
@@ -22,18 +23,36 @@ public class ProductoService {
     private final UserRepository userRepository;
     private final ComentarioRepository comentarioRepository;
 
-    public List<Producto> findAll(){
-        List<Producto> result= productoRepository.findAll();
-        if (result.isEmpty()){
+    public List<Producto> findAll() {
+        List<Producto> result = productoRepository.findAll();
+        if (result.isEmpty()) {
             throw new EntityNotFoundException("Productos no encontrados");
         }
         return result;
+    }
+
+    public List<Comentario> findAllComentarios() {
+        List<Comentario> result = comentarioRepository.findAll();
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException("Comentarios no encontrados");
+        }
+        return result;
+    }
+
+    public Comentario findByIdComentario(Long idComent, Long idProd){
+        if (productoRepository.existsById(idProd) && comentarioRepository.findById(idComent).get().getProducto().getId() == idProd){
+            return comentarioRepository.findById(idComent).get();
+        }
+
+        return null;
+
     }
     public Producto findById(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No hay producto con id: " + id));
     }
-    public Producto edit(Long id, EditProducto p ){
+
+    public Producto edit(Long id, EditProducto p) {
         return productoRepository.findById(id)
                 .map(producto -> {
                     producto.setNombre(p.getNombre());
@@ -45,18 +64,19 @@ public class ProductoService {
                 .orElseThrow(() -> new EntityNotFoundException());
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         if (productoRepository.existsById(id)) {
             productoRepository.deleteById(id);
         }
 
     }
-    public Producto save(CreateProduct createProduct){
+
+    public Producto save(CreateProduct createProduct) {
         return productoRepository.save(CreateProduct.toProducto(createProduct));
 
     }
 
-    public Optional<Producto> like(Long id, User user){
+    public Optional<Producto> like(Long id, User user) {
 
 
         if (productoRepository.existsById(id)) {
@@ -72,15 +92,19 @@ public class ProductoService {
 
     }
 
-    public Optional<Producto> comentario(Long id, Comentario comentario, User user){
-        if (productoRepository.existsById(id)){
-            productoRepository.findById(id).get().getComentarios().add(comentario);
-            comentario.setUser(user);
-            comentarioRepository.save(comentario);
+    public Producto comentario(Long id, CreateComentario commentary, User user) {
+        if (productoRepository.existsById(id)) {
+            productoRepository.findById(id).get().getComentarios().add(
+                    comentarioRepository.save(
+                            Comentario.builder()
+                                    .producto(productoRepository.findById(id).get())
+                                    .mensaje(commentary.getTexto())
+                                    .user(user)
+                                    .build()));
             productoRepository.save(productoRepository.findById(id).get());
-            return productoRepository.findById(id);
+            return productoRepository.findById(id).get();
         }
-        return Optional.empty();
+        return null;
 
     }
 
