@@ -2,6 +2,7 @@ package com.ortegapp.model.dto.producto;
 
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.user.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +11,10 @@ import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -32,17 +35,18 @@ public class CreateProduct {
     @Min(value = 0)
     private double precio;
 
-    private Set<User> likes;
+    private Set<UserResponse> likes = new HashSet<>();
 
 
-    public static Producto toProducto(CreateProduct editProducto){
+    public static Producto toProducto(CreateProduct createProduct){
         return Producto.builder()
-                .nombre(editProducto.getNombre())
-                .foto(editProducto.getFoto())
-                .tipo(editProducto.getTipo())
-                .descripcion(editProducto.getDescripcion())
-                .precio(editProducto.getPrecio())
-                .likes(editProducto.getLikes())
+                .nombre(createProduct.getNombre())
+                .foto(createProduct.getFoto())
+                .tipo(createProduct.getTipo())
+                .descripcion(createProduct.getDescripcion())
+                .precio(createProduct.getPrecio())
+                .likes(createProduct.getLikes().stream().map(UserResponse::fromUserResponse).collect(Collectors.toSet()))
+                .comentarios(new ArrayList<>())
                 .build();
     }
 }

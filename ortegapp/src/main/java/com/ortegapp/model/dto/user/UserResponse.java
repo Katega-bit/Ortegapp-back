@@ -37,4 +37,17 @@ public class UserResponse {
                 .build();
     }
 
+    public static User fromUserResponse(UserResponse user) {
+
+        return User.builder()
+                .username(user.getUsername())
+                .telefono(user.getTelefono())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .fullName(user.getFullName())
+                .createdAt(user.getCreatedAt())
+                .build();
+    }
+
+
 }

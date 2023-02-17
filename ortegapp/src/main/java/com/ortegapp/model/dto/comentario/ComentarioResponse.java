@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.user.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +23,8 @@ public class ComentarioResponse {
 
     private Producto producto;
 
-    private User user;
+    //mmm no se yo...
+    private String user;
 
     private String mensaje;
 
@@ -29,8 +33,11 @@ public class ComentarioResponse {
         return ComentarioResponse.builder()
                 .id(comentario.getId())
                 .producto(comentario.getProducto())
-                .user(comentario.getUser())
+                .user(comentario.getUser().getUsername())
                 .mensaje(comentario.getMensaje())
                 .build();
     }
+
+
+
 }
