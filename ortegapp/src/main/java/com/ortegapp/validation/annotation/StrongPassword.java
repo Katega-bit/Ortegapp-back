@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface StrongPassword {
 
-    String message() default "El nombre de usuario ya existe";
+    String message() default "Contraseña no valida";
 
     Class<?>[] groups() default {};
 

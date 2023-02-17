@@ -28,6 +28,8 @@ public class UserService {
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .avatar(createUserRequest.getAvatar())
                 .fullName(createUserRequest.getFullName())
+                .telefono(createUserRequest.getTelefono())
+                .email(createUserRequest.getEmail())
                 .roles(roles)
                 .build();
 
@@ -97,6 +99,9 @@ public class UserService {
     public boolean userExists(String username) {
         return userRepository.existsByUsername(username);
     }
+
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);}
 
 
 }
