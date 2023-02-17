@@ -18,7 +18,7 @@ public @interface PhoneNumber {
 
     Class<? extends Payload>[] payload() default {};
 
-    int min() default 6;
+    int min() default 8;
     int max() default 8;
     boolean hasNumber() default true;
 

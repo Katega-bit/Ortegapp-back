@@ -31,14 +31,14 @@ public class CreateUserRequest {
     @NotEmpty(message = "{userDto.password.notempty}")
     private String verifyPassword;
     @NotEmpty(message = "{newUserDto.email.notempty}")
-    @Email(message = "{newUserDto.email.email}")
     @UniqueEmail
+    @Email(message = "{newUserDto.email.email}")
     private String email;
     @PhoneNumber
     @NotEmpty
     private String telefono;
 
-    @URL(message = "{userDto.avatar.url}")
+    //@URL(message = "{userDto.avatar.url}")
     private String avatar;
     @NotEmpty(message = "{userDto.fullname.notempty}")
     private String fullName;

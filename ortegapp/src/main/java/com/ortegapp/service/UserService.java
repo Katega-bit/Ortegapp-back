@@ -28,6 +28,8 @@ public class UserService {
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .avatar(createUserRequest.getAvatar())
                 .fullName(createUserRequest.getFullName())
+                .telefono(createUserRequest.getTelefono())
+                .email(createUserRequest.getEmail())
                 .roles(roles)
                 .build();
 
