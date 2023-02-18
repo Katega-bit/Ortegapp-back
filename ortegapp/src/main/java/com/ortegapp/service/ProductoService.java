@@ -4,12 +4,21 @@ import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.dto.comentario.CreateComentario;
+import com.ortegapp.model.dto.page.PageResponse;
 import com.ortegapp.model.dto.producto.CreateProduct;
 import com.ortegapp.model.dto.producto.EditProducto;
+import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.repository.ComentarioRepository;
 import com.ortegapp.repository.ProductoRepository;
 import com.ortegapp.repository.UserRepository;
+import com.ortegapp.search.spec.GenericSpecificationBuilder;
+import com.ortegapp.search.spec.ProductoSpecificationBuilder;
+import com.ortegapp.search.util.SearchCriteria;
+import com.ortegapp.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -23,12 +32,21 @@ public class ProductoService {
     private final UserRepository userRepository;
     private final ComentarioRepository comentarioRepository;
 
-    public List<Producto> findAll() {
-        List<Producto> result = productoRepository.findAll();
-        if (result.isEmpty()) {
+    public PageResponse<ProductoResponse> search(List<SearchCriteria> params, Pageable pageable) {
+        ProductoSpecificationBuilder genericSpecificationBuilder = new ProductoSpecificationBuilder(params);
+        Specification<Producto> spec = genericSpecificationBuilder.build();
+        Page<ProductoResponse> productoResponsePage = productoRepository.findAll(spec, pageable).map(ProductoResponse::toProductoResponse);
+        return new PageResponse<>(productoResponsePage);
+
+    }
+
+    public PageResponse<ProductoResponse> findAll(String s, Pageable pageable) {
+        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
+        PageResponse<ProductoResponse> res = search(params, pageable);
+        if (res.getContent().isEmpty()) {
             throw new EntityNotFoundException("Productos no encontrados");
         }
-        return result;
+        return res;
     }
 
     public List<Comentario> findAllComentarios() {

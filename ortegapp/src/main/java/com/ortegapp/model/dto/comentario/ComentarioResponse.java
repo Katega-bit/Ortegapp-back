@@ -21,10 +21,10 @@ public class ComentarioResponse {
 
     private Long id;
 
-    private Producto producto;
+    private String producto;
 
     //mmm no se yo...
-    private String user;
+    private String user, avatar, fullname;
 
     private String mensaje;
 
@@ -32,7 +32,9 @@ public class ComentarioResponse {
     public static ComentarioResponse toComentario(Comentario comentario){
         return ComentarioResponse.builder()
                 .id(comentario.getId())
-                .producto(comentario.getProducto())
+                .avatar(comentario.getUser().getAvatar())
+                .fullname(comentario.getUser().getFullName())
+                .producto(comentario.getProducto().getNombre())
                 .user(comentario.getUser().getUsername())
                 .mensaje(comentario.getMensaje())
                 .build();
