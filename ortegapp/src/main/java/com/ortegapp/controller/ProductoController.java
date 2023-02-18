@@ -2,11 +2,17 @@ package com.ortegapp.controller;
 
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.page.PageResponse;
 import com.ortegapp.model.dto.producto.CreateProduct;
 import com.ortegapp.model.dto.producto.EditProducto;
 import com.ortegapp.model.dto.producto.ProductoResponse;
+import com.ortegapp.search.util.SearchCriteria;
+import com.ortegapp.search.util.SearchCriteriaExtractor;
 import com.ortegapp.service.ProductoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,14 +32,12 @@ public class ProductoController {
     private final ProductoService productoService;
 
     @GetMapping
-    public List<ProductoResponse> getAll(){
+    public PageResponse<ProductoResponse> getAll(@RequestParam(value = "search", defaultValue = "") String search,
+    @PageableDefault(size = 20, page = 0) Pageable pageable){
 
-        List<ProductoResponse> productoListResponse = new ArrayList<>();
-        productoService.findAll().forEach(producto -> {
-            productoListResponse.add(ProductoResponse.toProductoResponse(producto));
-        });
-
-        return productoListResponse;
+        PageResponse<ProductoResponse> result = productoService.findAll(search, pageable);
+        
+        return result;
     }
 
     @GetMapping("/{id}")
@@ -69,7 +73,7 @@ public class ProductoController {
     }
 
     @PostMapping("/like/{id}")
-    public ResponseEntity<Producto> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
-        return  ResponseEntity.status(HttpStatus.CREATED).body(productoService.like(id, user).get());
+    public ResponseEntity<ProductoResponse> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
+        return  ResponseEntity.status(HttpStatus.CREATED).body(ProductoResponse.toProductoResponse( productoService.like(id, user).get()));
     }
 }
