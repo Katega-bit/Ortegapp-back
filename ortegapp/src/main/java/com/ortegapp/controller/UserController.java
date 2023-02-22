@@ -1,6 +1,7 @@
 package com.ortegapp.controller;
 
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.*;
 import com.ortegapp.security.jwt.access.JwtProvider;
 import com.ortegapp.security.jwt.refresh.RefreshToken;
@@ -8,6 +9,13 @@ import com.ortegapp.security.jwt.refresh.RefreshTokenException;
 import com.ortegapp.security.jwt.refresh.RefreshTokenRequest;
 import com.ortegapp.security.jwt.refresh.RefreshTokenService;
 import com.ortegapp.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +39,25 @@ public class UserController {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
-
+    @Operation(summary = "Registra un nuevo usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha creado un nuevo usuario",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "a9fe0178-8679-1260-8186-7a8332e20001",
+                                        "username": "user2",
+                                        "avatar": null,
+                                        "fullName": "Carlos Ortega",
+                                        "createdAt": null
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido los datos correctamente",
+                    content = @Content),
+    })
     @PostMapping("/auth/register")
     public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody CreateUserRequest createUserRequest) {
         User user = userService.createUserWithUserRole(createUserRequest);
@@ -39,8 +65,25 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
 
-    // Más adelante podemos manejar la seguridad de acceso a esta petición
-
+    @Operation(summary = "Registra un nuevo usuario administrador")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha creado un nuevo usuario administrador",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "a9fe0178-8679-1260-8186-7a8332e20001",
+                                        "username": "user2",
+                                        "avatar": null,
+                                        "fullName": "Carlos Ortega",
+                                        "createdAt": null
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido los datos correctamente",
+                    content = @Content),
+    })
     @PostMapping("/auth/register/admin")
     public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody CreateUserRequest createUserRequest) {
         User user = userService.createUserWithAdminRole(createUserRequest);
@@ -48,11 +91,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
 
-
+    @Operation(summary = "Logea un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha logeado un usuario",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "a9fe0178-8679-1260-8186-7a8332e20001",
+                                        "username": "user2",
+                                        "avatar": null,
+                                        "fullName": "Carlos Ortega",
+                                        "createdAt": null
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido los datos correctamente",
+                    content = @Content),
+    })
     @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 
-        // Realizamos la autenticación
 
         Authentication authentication =
                 authManager.authenticate(
@@ -62,15 +122,12 @@ public class UserController {
                         )
                 );
 
-        // Una vez realizada, la guardamos en el contexto de seguridad
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Devolvemos una respuesta adecuada
         String token = jwtProvider.generateToken(authentication);
 
         User user = (User) authentication.getPrincipal();
 
-        // Eliminamos el token (si existe) antes de crearlo, ya que cada usuario debería tener solamente un token de refresco simultáneo
         refreshTokenService.deleteByUser(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
@@ -79,7 +136,22 @@ public class UserController {
 
 
     }
-
+    @Operation(summary = "Refresca el token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha refrescado el token",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhOWZlMDE3OC04Njc5LTEyNjAtODE4Ni03OWQyOTc0OTAwMDAiLCJpYXQiOjE2NzcwOTMwNTEsImV4cCI6MTY3NzA5MzY1MX0.4n63Fi1p5JPRUKtKz78tDS80BeXI3o2T2U1QIBxAYxCmbSlVCcdApC2L_zJxDWf1h7HTHJikuyaypbQb9_V0Ew",
+                                        "refreshToken": "955acd0e-c887-4836-b2d5-c3f2807e967c"
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducido los datos correctamente",
+                    content = @Content),
+    })
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         String refreshToken = refreshTokenRequest.getRefreshToken();
@@ -102,23 +174,33 @@ public class UserController {
     }
 
 
-
+    @Operation(summary = "Cambia la contraseña de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha refrescado el token",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhOWZlMDE3OC04Njc5LTEyNjAtODE4Ni03OWQyOTc0OTAwMDAiLCJpYXQiOjE2NzcwOTMwNTEsImV4cCI6MTY3NzA5MzY1MX0.4n63Fi1p5JPRUKtKz78tDS80BeXI3o2T2U1QIBxAYxCmbSlVCcdApC2L_zJxDWf1h7HTHJikuyaypbQb9_V0Ew",
+                                        "refreshToken": "955acd0e-c887-4836-b2d5-c3f2807e967c"
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se han encontrado el usuario o los datos introducidos son incorrectos",
+                    content = @Content),
+    })
     @PutMapping("/user/changePassword")
     public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
                                                        @AuthenticationPrincipal User loggedUser) {
 
-        // Este código es mejorable.
-        // La validación de la contraseña nueva se puede hacer con un validador.
-        // La gestión de errores se puede hacer con excepciones propias
         try {
             if (userService.passwordMatch(loggedUser, changePasswordRequest.getOldPassword())) {
                 Optional<User> modified = userService.editPassword(loggedUser.getId(), changePasswordRequest.getNewPassword());
                 if (modified.isPresent())
                     return ResponseEntity.ok(UserResponse.fromUser(modified.get()));
             } else {
-                // Lo ideal es que esto se gestionara de forma centralizada
-                // Se puede ver cómo hacerlo en la formación sobre Validación con Spring Boot
-                // y la formación sobre Gestión de Errores con Spring Boot
+
                 throw new RuntimeException();
             }
         } catch (RuntimeException ex) {
@@ -127,7 +209,26 @@ public class UserController {
 
         return null;
     }
-
+    @Operation(summary = "Este método muestra una caja por su id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha encontrado la caja",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "id": "a9fe0178-8679-1260-8186-7a8332e20001",
+                                        "username": "user2",
+                                        "avatar": null,
+                                        "fullName": "Carlos Ortega",
+                                        "createdAt": null
+                                    }
+                                    """
+                            ))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado niguna caja con ese ID",
+                    content = @Content),
+    })
     @GetMapping("/me")
     public UserResponse getUser(@AuthenticationPrincipal User user){
         return UserResponse.fromUser(user);
