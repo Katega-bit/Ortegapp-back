@@ -128,5 +128,10 @@ public class UserController {
         return null;
     }
 
+    @GetMapping("/me")
+    public UserResponse getUser(@AuthenticationPrincipal User user){
+        return UserResponse.fromUser(user);
+    }
+
 
 }
