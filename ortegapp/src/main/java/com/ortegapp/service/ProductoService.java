@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +98,9 @@ public class ProductoService {
 
     public Optional<Producto> like(Long id, User user) {
 
+        if(productoRepository.findById(id).get().getLikes().contains(user)) {
+            productoRepository.findById(id).get().getLikes().remove(user);
+        }
 
         if (productoRepository.existsById(id)) {
 
