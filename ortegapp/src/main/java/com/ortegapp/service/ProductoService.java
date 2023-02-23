@@ -86,6 +86,7 @@ public class ProductoService {
 
     public void delete(Long id) {
         if (productoRepository.existsById(id)) {
+            
             productoRepository.deleteById(id);
         }
 
@@ -96,22 +97,27 @@ public class ProductoService {
 
     }
 
-    public Optional<Producto> like(Long id, User user) {
+    public Producto like(Long id, User user) {
 
-        if(productoRepository.findById(id).get().getLikes().contains(user)) {
-            productoRepository.findById(id).get().getLikes().remove(user);
-        }
 
         if (productoRepository.existsById(id)) {
+            if(productoRepository.findById(id).get().getLikes().contains(user)) {
+                productoRepository.findById(id).get().getLikes().remove(user);
+                productoRepository.save(productoRepository.findById(id).get());
+            }
+            else {
 
-            productoRepository.findById(id).get().getLikes().add(user);
-            productoRepository.save(productoRepository.findById(id).get());
-            userRepository.findById(user.getId()).get().getLikes().add(productoRepository.findById(id).get());
-            userRepository.save(user);
-            return productoRepository.findById(id);
+                productoRepository.findById(id).get().getLikes().add(user);
+                productoRepository.save(productoRepository.findById(id).get());
+                userRepository.findById(user.getId()).get().getLikes().add(productoRepository.findById(id).get());
+                userRepository.save(user);
+            }
+            return productoRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException());
         }
 
-        return Optional.empty();
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException());
 
     }
 

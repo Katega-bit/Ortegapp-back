@@ -232,6 +232,6 @@ public class ProductoController {
     })
     @PostMapping("/like/{id}")
     public ResponseEntity<ProductoResponse> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
-        return  ResponseEntity.status(HttpStatus.CREATED).body(ProductoResponse.toProductoResponse( productoService.like(id, user).get()));
+        return  ResponseEntity.status(HttpStatus.CREATED).body(ProductoResponse.toProductoResponse( productoService.like(id, user)));
     }
 }

@@ -55,7 +55,6 @@ public class User implements UserDetails {
     private String avatar;
 
     private String fullName;
-
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Producto> likes = new HashSet<>();
 
