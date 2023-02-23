@@ -46,34 +46,35 @@ public class ProductoController {
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ProductoResponse.class)),
                             examples = @ExampleObject(value = """
-                                                {
-                                                    "content": [
-                                                        {
-                                                            "id": 1,
-                                                            "nombre": "Wine - Port Late Bottled Vintage",
-                                                            "foto": "http://comsenz.com/eleifend/quam/a/odio.jsp",
-                                                            "tipo": "Vitz",
-                                                            "descripcion": "Vivamus tortor.",
-                                                            "precio": 19.0,
-                                                            "likes": [],
-                                                            "comentarios": []
-                                                        },
-                                                        {
-                                                            "id": 4,
-                                                            "nombre": "Skewers - Bamboo",
-                                                            "foto": "http://rakuten.co.jp/amet/turpis/elementum/ligula/vehicula.jsp",
-                                                            "tipo": "Dynabox",
-                                                            "descripcion": "Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl.",
-                                                            "precio": 7.8,
-                                                            "likes": [],
-                                                            "comentarios": []
-                                                        }
-                                                       
-                                                    ],
-                                                    "totalElements": 13,
-                                                    "totalPages": 1,
-                                                    "page": 0
-                                                }
+                                                
+                            {
+                                "content": [
+                                    {
+                                        "id": 1,
+                                        "nombre": "Wine - Port Late Bottled Vintage",
+                                        "foto": "http://comsenz.com/eleifend/quam/a/odio.jsp",
+                                        "tipo": "Vitz",
+                                        "descripcion": "Vivamus tortor.",
+                                        "precio": 19.0,
+                                        "likes": [],
+                                        "comentarios": []
+                                    },
+                                    {
+                                        "id": 4,
+                                        "nombre": "Skewers - Bamboo",
+                                        "foto": "http://rakuten.co.jp/amet/turpis/elementum/ligula/vehicula.jsp",
+                                        "tipo": "Dynabox",
+                                        "descripcion": "Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede. Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat. Nulla nisl. Nunc nisl.",
+                                        "precio": 7.8,
+                                        "likes": [],
+                                        "comentarios": []
+                                    }
+                                ],
+                                "totalElements": 13,
+                                "totalPages": 1,
+                                "page": 0
+                            }
+                            
                                     """
                             ))}),
             @ApiResponse(responseCode = "404",
