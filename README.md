@@ -33,11 +33,16 @@ Se pueden realizar las siguientes funcionalidades: 	:point_right:
 * Borrado de un PRODUCTO
 
 
-* Listado de los diferentes TIPOS DE ALIMENTO
-* Búsqueda de un TIPO DE ALIMENTO por su id
-* Creación de un nuevo TIPO DE ALIMENTO
-* Edición de un TIPO DE ALIMEMTO
-* Borrado de un TIPO DE ALIMENTO
+* Listado de los USER
+* Búsqueda de un USER por id
+* Creación de un nuevo TUSER
+* Edición de un USER
+* Borrado de un USER
+
+* Creacion de un COMENTARIO
+* Borrado de un COMENTARIO
+* Busqueda de un COMENTARIOS en un PRODUCTO por id
+
 
 
 
@@ -145,6 +150,15 @@ Si diese algún error, realiza el siguiente comando:
 
     mvn dependencies:resolve
     ---> 100% 
+
+Credenciales Basicas de logeo:
+* ADMIN: 
+username: admin
+password: Aa1234578*
+
+* USER: 
+username: user
+password: Aa1234578*    
 
 ___
 ## **Autores**

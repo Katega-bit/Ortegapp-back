@@ -247,7 +247,7 @@ public class UserController {
         return result;
     }
 
-    
+
 
     @Operation(summary = "Este método borra un usuario por ID")
     @ApiResponses(value = {
