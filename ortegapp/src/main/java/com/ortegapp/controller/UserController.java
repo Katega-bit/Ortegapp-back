@@ -32,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -246,29 +247,28 @@ public class UserController {
         return result;
     }
 
-    @PutMapping("/user/editusername")
-    public UserResponse editUsername(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
-        return userService.editUsername(editUserRequest, user);
-    }
+    
 
-    @PutMapping("/user/editfullname")
-    public UserResponse editFullName(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
-        return userService.editFullName(editUserRequest, user);
-    }
+    @Operation(summary = "Este método borra un usuario por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Se ha encontrado el usuario",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = ProductoResponse.class)),
+                            examples = @ExampleObject(value = """
 
-    @PutMapping("/user/editemail")
-    public UserResponse editEmail(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
-        return userService.editEmail(editUserRequest, user);
-    }
+                                    """
+                            ))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se ha encontrado nigun producto con ese ID",
+                    content = @Content),
+    })
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<?> deleteUserById(UUID id){
+      userService.deleteById(id);
 
-    @PutMapping("/user/editavatar")
-    public UserResponse editAvatar(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
-        return userService.editAvatar(editUserRequest, user);
-    }
+        return ResponseEntity.noContent().build();
 
-    @PutMapping("/user/editphone")
-    public UserResponse editPhone(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
-        return userService.editPhone(editUserRequest, user);
     }
 
 

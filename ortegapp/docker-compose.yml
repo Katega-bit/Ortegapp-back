@@ -5,8 +5,8 @@ services:
     container_name: db
     restart: always
     environment:
-      - POSTGRES_DB=product
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ortegapp
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
     ports:
       - "5555:5432"

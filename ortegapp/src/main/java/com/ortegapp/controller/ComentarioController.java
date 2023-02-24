@@ -100,5 +100,11 @@ public class ComentarioController {
         return comentariosResponse;
     }
 
+    @DeleteMapping("/{id}/comentario/{id2}")
+    public ResponseEntity<?> deleteById(@PathVariable Long idProducto, @PathVariable Long idComentario){
+        productoService.deleteComentarioById(idProducto, idComentario);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

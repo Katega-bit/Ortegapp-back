@@ -143,7 +143,7 @@ public class ProductoController {
                     description = "No se han introducido los datos correctamente",
                     content = @Content),
     })
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<ProductoResponse> newProducto( @RequestPart("producto") @Valid CreateProduct createProduct,
      @RequestPart("file") MultipartFile file){
         ProductoResponse nuevo = productoService.save(createProduct, file);
@@ -181,7 +181,7 @@ public class ProductoController {
                     description = "No existe el producto o los datos de edicion son incorrectos ",
                     content = @Content),
     })
-    @PutMapping("/{id}")
+    @PutMapping("/admin/{id}")
     public ProductoResponse editProducto(@PathVariable Long id, @RequestBody EditProducto editProducto){
             return ProductoResponse.toProductoResponse(productoService.edit(id, editProducto));
     }
@@ -199,7 +199,7 @@ public class ProductoController {
                     description = "No se ha encontrado nigun producto con ese ID",
                     content = @Content),
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/{id}")
     public ResponseEntity<?> deleteProducto(@PathVariable Long id){
         productoService.delete(id);
         return ResponseEntity.noContent().build();
@@ -239,9 +239,47 @@ public class ProductoController {
         return  ResponseEntity.status(HttpStatus.CREATED).body(ProductoResponse.toProductoResponse( productoService.like(id, user)));
     }
 
-
+    @Operation(summary = "Devuelve una lista de productos de un solo tipo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha guardado un producto que te gusta",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProductoResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        "content": [
+                                            {
+                                                "id": 1,
+                                                "nombre": "Fresitas",
+                                                "foto": "http://comsenz.com/eleifend/quam/a/odio.jsp",
+                                                "tipo": "Gomitas",
+                                                "descripcion": "Lorem ipsum",
+                                                "precio": 10.0,
+                                                "likes": [],
+                                                "comentarios": []
+                                            },
+                                            {
+                                                "id": 2,
+                                                "nombre": "Gusanitos",
+                                                "foto": "http://comsenz.com/eleifend/quam/a/odio.jsp",
+                                                "tipo": "Snacks",
+                                                "descripcion": "Lorem ipsum",
+                                                "precio": 15.0,
+                                                "likes": [],
+                                                "comentarios": []
+                                            }
+                                        ],
+                                        "totalElements": 5,
+                                        "totalPages": 1,
+                                        "page": 0
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No se ha encontrado el producto",
+                    content = @Content),
+    })
     @GetMapping("/tipo/{tipo}")
-    public PageResponse<ProductoResponse> findProductosByTipos(@PageableDefault(size = 3, page = 0) Pageable pageable, @Parameter(name = "tipo",
+    public Page<Producto> findProductosByTipos(@PageableDefault(size = 3, page = 0) Pageable pageable, @Parameter(name = "tipo",
             description = "Se debe proporcionar el tipo del producto para buscar productos de ese tipo en concreto") @PathVariable String tipo) {
         return productoService.findProductosbytipo(tipo, pageable);
     }

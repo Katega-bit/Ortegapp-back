@@ -1,15 +1,12 @@
 package com.ortegapp.service;
 
-import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.UserRole;
 import com.ortegapp.model.dto.page.PageResponse;
-import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.CreateUserRequest;
-import com.ortegapp.model.dto.user.EditUserRequest;
+import com.ortegapp.model.dto.user.EditUserEmailRequest;
 import com.ortegapp.model.dto.user.UserResponse;
 import com.ortegapp.repository.UserRepository;
-import com.ortegapp.search.spec.ProductoSpecificationBuilder;
 import com.ortegapp.search.spec.UserSpecificationBuilder;
 import com.ortegapp.search.util.SearchCriteria;
 import com.ortegapp.search.util.SearchCriteriaExtractor;
@@ -68,42 +65,16 @@ public class UserService {
         return userRepository.findFirstByUsername(username);
     }
 
-    public UserResponse editUsername(EditUserRequest user, User userAuth) {
 
-            userAuth.setUsername(user.getUsername());
-            userRepository.save(userAuth);
-            return UserResponse.fromUser(userAuth);
-    }
-
-    public UserResponse editFullName(EditUserRequest user, User userAuth) {
+    public EditUserEmailRequest editPhoneName(EditUserEmailRequest user, User userAuth) {
 
         userAuth.setFullName(user.getFullName());
         userRepository.save(userAuth);
-        return UserResponse.fromUser(userAuth);
+        return EditUserEmailRequest.builder()
+                .fullName(user.getFullName())
+                .build();
     }
 
-    public UserResponse editPhone(EditUserRequest user, User userAuth) {
-
-        userAuth.setTelefono(user.getTelefono());
-        userRepository.save(userAuth);
-        return UserResponse.fromUser(userAuth);
-    }
-
-    public UserResponse editEmail(EditUserRequest user, User userAuth) {
-
-        userAuth.setEmail(user.getEmail());
-        userRepository.save(userAuth);
-        return UserResponse.fromUser(userAuth);
-    }
-
-
-
-    public UserResponse editAvatar(EditUserRequest user, User userAuth) {
-
-        userAuth.setAvatar(user.getAvatar());
-        userRepository.save(userAuth);
-        return UserResponse.fromUser(userAuth);
-    }
 
     public Optional<User> editPassword(UUID userId, String newPassword) {
 

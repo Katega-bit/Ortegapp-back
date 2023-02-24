@@ -156,9 +156,17 @@ public class ProductoService {
 
     }
 
-    public PageResponse<ProductoResponse> findProductosbytipo(String tipo, Pageable pageable) {
-        PageResponse<ProductoResponse> res = (PageResponse<ProductoResponse>) productoRepository.findProductosTipo(tipo, pageable);
+    public Page<Producto> findProductosbytipo(String tipo, Pageable pageable) {
+        Page<Producto> res = productoRepository.findProductosTipo(tipo, pageable);
         return res;
     }
+
+    public void deleteComentarioById(Long idProducto, Long idComentario){
+        if (productoRepository.findById(idProducto).get().getComentarios().contains(comentarioRepository.findById(idComentario))){
+            comentarioRepository.deleteById(idComentario);
+        }
+
+    }
+
 
 }
