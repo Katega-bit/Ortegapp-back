@@ -17,7 +17,7 @@ public class UserResponse {
 
 
 
-    protected String id,username, avatar, fullName;
+    protected String id,username, avatar, fullName, email;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime createdAt;
@@ -29,6 +29,7 @@ public class UserResponse {
                 .id(user.getId().toString())
                 .username(user.getUsername())
                 .avatar(user.getAvatar())
+                .email(user.getEmail())
                 .fullName(user.getFullName())
                 .createdAt(user.getCreatedAt())
                 .build();
@@ -39,6 +40,7 @@ public class UserResponse {
         return User.builder()
                 .username(user.getUsername())
                 .avatar(user.getAvatar())
+                .email(user.getEmail())
                 .fullName(user.getFullName())
                 .createdAt(user.getCreatedAt())
                 .build();

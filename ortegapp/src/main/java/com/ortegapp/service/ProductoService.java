@@ -1,5 +1,6 @@
 package com.ortegapp.service;
 
+import com.ortegapp.files.service.StorageService;
 import com.ortegapp.model.Comentario;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
@@ -20,11 +21,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.transaction.Transactional;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -33,6 +34,9 @@ public class ProductoService {
     private final ProductoRepository productoRepository;
     private final UserRepository userRepository;
     private final ComentarioRepository comentarioRepository;
+
+    private final StorageService storageService;
+
 
     public PageResponse<ProductoResponse> search(List<SearchCriteria> params, Pageable pageable) {
         ProductoSpecificationBuilder genericSpecificationBuilder = new ProductoSpecificationBuilder(params);
@@ -91,9 +95,23 @@ public class ProductoService {
         }
 
     }
+    @Transactional
+    public ProductoResponse save(CreateProduct createProduct, MultipartFile file) {
+        String filename = storageService.store(file);
 
-    public Producto save(CreateProduct createProduct) {
-        return productoRepository.save(CreateProduct.toProducto(createProduct));
+        return ProductoResponse.toProductoResponse(
+                productoRepository.save(
+                        Producto.builder()
+                                .nombre(createProduct.getNombre())
+                                .tipo(createProduct.getTipo())
+                                .foto(filename)
+                                .descripcion(createProduct.getDescripcion())
+                                .precio(createProduct.getPrecio())
+                                .likes(new HashSet<>())
+                                .comentarios(new ArrayList<>())
+                                .build()
+                )
+        );
 
     }
 
@@ -121,6 +139,7 @@ public class ProductoService {
 
     }
 
+
     public Producto comentario(Long id, CreateComentario commentary, User user) {
         if (productoRepository.existsById(id)) {
             productoRepository.findById(id).get().getComentarios().add(
@@ -135,6 +154,11 @@ public class ProductoService {
         }
         return null;
 
+    }
+
+    public PageResponse<ProductoResponse> findProductosbytipo(String tipo, Pageable pageable) {
+        PageResponse<ProductoResponse> res = (PageResponse<ProductoResponse>) productoRepository.findProductosTipo(tipo, pageable);
+        return res;
     }
 
 }

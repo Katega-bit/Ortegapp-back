@@ -85,6 +85,7 @@ public class SecurityConfig {
                                 .authorizeRequests()
                                 .antMatchers("/producto/**").hasAnyRole("USER", "ADMIN")
                                 .antMatchers("/auth/register/admin").hasRole("ADMIN")
+                                .antMatchers("/user/**").hasRole("ADMIN")
                                 .antMatchers("/me").hasAnyRole("USER", "ADMIN")
                                 .anyRequest().authenticated();
 

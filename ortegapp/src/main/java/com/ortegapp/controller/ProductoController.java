@@ -10,6 +10,7 @@ import com.ortegapp.search.util.SearchCriteria;
 import com.ortegapp.search.util.SearchCriteriaExtractor;
 import com.ortegapp.service.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -142,8 +144,9 @@ public class ProductoController {
                     content = @Content),
     })
     @PostMapping
-    public ResponseEntity<ProductoResponse> newProducto(@Valid @RequestBody CreateProduct createProduct){
-        Producto nuevo = productoService.save(createProduct);
+    public ResponseEntity<ProductoResponse> newProducto( @RequestPart("producto") @Valid CreateProduct createProduct,
+     @RequestPart("file") MultipartFile file){
+        ProductoResponse nuevo = productoService.save(createProduct, file);
 
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -153,7 +156,7 @@ public class ProductoController {
 
         return ResponseEntity
                 .created(createdURI)
-                .body(ProductoResponse.toProductoResponse(nuevo));
+                .body(nuevo);
 
     }
     @Operation(summary = "Actualiza el producto de la lista")
@@ -234,5 +237,12 @@ public class ProductoController {
     @PostMapping("/like/{id}")
     public ResponseEntity<ProductoResponse> likeProducto(@PathVariable Long id, @AuthenticationPrincipal User user){
         return  ResponseEntity.status(HttpStatus.CREATED).body(ProductoResponse.toProductoResponse( productoService.like(id, user)));
+    }
+
+
+    @GetMapping("/tipo/{tipo}")
+    public PageResponse<ProductoResponse> findProductosByTipos(@PageableDefault(size = 3, page = 0) Pageable pageable, @Parameter(name = "tipo",
+            description = "Se debe proporcionar el tipo del producto para buscar productos de ese tipo en concreto") @PathVariable String tipo) {
+        return productoService.findProductosbytipo(tipo, pageable);
     }
 }

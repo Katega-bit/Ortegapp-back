@@ -3,13 +3,25 @@ package com.ortegapp.service;
 import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.UserRole;
+import com.ortegapp.model.dto.page.PageResponse;
+import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.CreateUserRequest;
+import com.ortegapp.model.dto.user.EditUserRequest;
+import com.ortegapp.model.dto.user.UserResponse;
 import com.ortegapp.repository.UserRepository;
+import com.ortegapp.search.spec.ProductoSpecificationBuilder;
+import com.ortegapp.search.spec.UserSpecificationBuilder;
+import com.ortegapp.search.util.SearchCriteria;
+import com.ortegapp.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -56,18 +68,41 @@ public class UserService {
         return userRepository.findFirstByUsername(username);
     }
 
-    public Optional<User> edit(User user) {
+    public UserResponse editUsername(EditUserRequest user, User userAuth) {
 
-        // El username no se puede editar
-        // La contraseña se edita en otro método
+            userAuth.setUsername(user.getUsername());
+            userRepository.save(userAuth);
+            return UserResponse.fromUser(userAuth);
+    }
 
-        return userRepository.findById(user.getId())
-                .map(u -> {
-                    u.setAvatar(user.getAvatar());
-                    u.setFullName(user.getFullName());
-                    return userRepository.save(u);
-                }).or(() -> Optional.empty());
+    public UserResponse editFullName(EditUserRequest user, User userAuth) {
 
+        userAuth.setFullName(user.getFullName());
+        userRepository.save(userAuth);
+        return UserResponse.fromUser(userAuth);
+    }
+
+    public UserResponse editPhone(EditUserRequest user, User userAuth) {
+
+        userAuth.setTelefono(user.getTelefono());
+        userRepository.save(userAuth);
+        return UserResponse.fromUser(userAuth);
+    }
+
+    public UserResponse editEmail(EditUserRequest user, User userAuth) {
+
+        userAuth.setEmail(user.getEmail());
+        userRepository.save(userAuth);
+        return UserResponse.fromUser(userAuth);
+    }
+
+
+
+    public UserResponse editAvatar(EditUserRequest user, User userAuth) {
+
+        userAuth.setAvatar(user.getAvatar());
+        userRepository.save(userAuth);
+        return UserResponse.fromUser(userAuth);
     }
 
     public Optional<User> editPassword(UUID userId, String newPassword) {
@@ -102,6 +137,26 @@ public class UserService {
 
     public boolean emailExists(String email) {
         return userRepository.existsByEmail(email);}
+
+    public PageResponse<UserResponse> findAll(String s, Pageable pageable) {
+        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
+        PageResponse<UserResponse> res = search(params, pageable);
+        if (res.getContent().isEmpty()) {
+            throw new EntityNotFoundException("Productos no encontrados");
+        }
+        return res;
+    }
+
+
+    public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
+        UserSpecificationBuilder genericSpecificationBuilder = new UserSpecificationBuilder(params);
+        Specification<User> spec = genericSpecificationBuilder.build();
+        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        return new PageResponse<>(userResponsePage);
+
+    }
+
+
 
 
 }

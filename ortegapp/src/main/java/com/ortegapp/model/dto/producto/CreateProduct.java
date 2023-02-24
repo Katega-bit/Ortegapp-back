@@ -27,8 +27,6 @@ public class CreateProduct {
     @NotEmpty(message = "{product.tipo.empty}")
     private String tipo;
 
-    @URL(message = "{product.foto.url}")
-    private String foto;
 
     @NotEmpty(message = "{product.descripcion.empty}")
     private String descripcion;
@@ -41,7 +39,6 @@ public class CreateProduct {
     public static Producto toProducto(CreateProduct createProduct){
         return Producto.builder()
                 .nombre(createProduct.getNombre())
-                .foto(createProduct.getFoto())
                 .tipo(createProduct.getTipo())
                 .descripcion(createProduct.getDescripcion())
                 .precio(createProduct.getPrecio())

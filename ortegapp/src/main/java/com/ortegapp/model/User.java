@@ -1,5 +1,6 @@
 package com.ortegapp.model;
 
+import com.ortegapp.model.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -70,7 +71,8 @@ public class User implements UserDetails {
     @Builder.Default
     private boolean enabled = true;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Convert(converter = EnumSetUserRoleConverter.class)
+
     private Set<UserRole> roles;
 
     @CreatedDate

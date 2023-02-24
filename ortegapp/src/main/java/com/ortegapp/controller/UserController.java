@@ -1,6 +1,7 @@
 package com.ortegapp.controller;
 
 import com.ortegapp.model.User;
+import com.ortegapp.model.dto.page.PageResponse;
 import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.*;
 import com.ortegapp.security.jwt.access.JwtProvider;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -233,6 +236,41 @@ public class UserController {
     public UserResponse getUser(@AuthenticationPrincipal User user){
         return UserResponse.fromUser(user);
     }
+
+    @GetMapping("/user")
+    public PageResponse<UserResponse> getAll(@RequestParam(value = "search", defaultValue = "") String search,
+                                                 @PageableDefault(size = 20, page = 0) Pageable pageable){
+
+        PageResponse<UserResponse> result = userService.findAll(search, pageable);
+
+        return result;
+    }
+
+    @PutMapping("/user/editusername")
+    public UserResponse editUsername(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
+        return userService.editUsername(editUserRequest, user);
+    }
+
+    @PutMapping("/user/editfullname")
+    public UserResponse editFullName(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
+        return userService.editFullName(editUserRequest, user);
+    }
+
+    @PutMapping("/user/editemail")
+    public UserResponse editEmail(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
+        return userService.editEmail(editUserRequest, user);
+    }
+
+    @PutMapping("/user/editavatar")
+    public UserResponse editAvatar(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
+        return userService.editAvatar(editUserRequest, user);
+    }
+
+    @PutMapping("/user/editphone")
+    public UserResponse editPhone(@AuthenticationPrincipal User user, EditUserRequest editUserRequest){
+        return userService.editPhone(editUserRequest, user);
+    }
+
 
 
 }
