@@ -1,8 +1,10 @@
 package com.ortegapp.service;
 
+import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.UserRole;
 import com.ortegapp.model.dto.page.PageResponse;
+import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.CreateUserRequest;
 import com.ortegapp.model.dto.user.EditUserEmailRequest;
 import com.ortegapp.model.dto.user.UserResponse;
@@ -19,10 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -126,6 +125,8 @@ public class UserService {
         return new PageResponse<>(userResponsePage);
 
     }
+
+
 
 
 

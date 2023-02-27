@@ -18,6 +18,7 @@ import com.ortegapp.search.util.SearchCriteria;
 import com.ortegapp.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class ProductoService {
         return new PageResponse<>(productoResponsePage);
 
     }
+
 
     public PageResponse<ProductoResponse> findAll(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
@@ -167,6 +169,16 @@ public class ProductoService {
         }
 
     }
+
+    public PageResponse<ProductoResponse> melike(User user, Pageable pageable) {
+
+        Page<Producto> postOfOneUserByUserName = userRepository.mylikes(user.getUsername(), pageable);
+        Page<ProductoResponse> postResponsePage =
+                new PageImpl<>
+                        (postOfOneUserByUserName.stream().toList(), pageable, postOfOneUserByUserName.getTotalPages()).map(ProductoResponse::toProductoResponse);
+        return new PageResponse<>(postResponsePage);
+    }
+
 
 
 }

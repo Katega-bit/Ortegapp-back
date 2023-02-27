@@ -1,14 +1,17 @@
 package com.ortegapp.controller;
 
+import com.ortegapp.model.Producto;
 import com.ortegapp.model.User;
 import com.ortegapp.model.dto.page.PageResponse;
 import com.ortegapp.model.dto.producto.ProductoResponse;
 import com.ortegapp.model.dto.user.*;
+import com.ortegapp.repository.ProductoRepository;
 import com.ortegapp.security.jwt.access.JwtProvider;
 import com.ortegapp.security.jwt.refresh.RefreshToken;
 import com.ortegapp.security.jwt.refresh.RefreshTokenException;
 import com.ortegapp.security.jwt.refresh.RefreshTokenRequest;
 import com.ortegapp.security.jwt.refresh.RefreshTokenService;
+import com.ortegapp.service.ProductoService;
 import com.ortegapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -32,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -39,9 +43,11 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final ProductoService productoService;
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
+    private final ProductoRepository productoRepository;
 
     @Operation(summary = "Registra un nuevo usuario")
     @ApiResponses(value = {
@@ -270,6 +276,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
 
     }
+
+    @GetMapping("/melikes/")
+    public PageResponse<ProductoResponse> melikes(@AuthenticationPrincipal User user,  @PageableDefault(size = 20, page = 0) Pageable pageable){
+       return productoService.melike(user, pageable);
+
+    }
+
 
 
 
