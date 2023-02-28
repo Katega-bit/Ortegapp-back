@@ -23,7 +23,6 @@ public class ComentarioResponse {
 
     private String producto;
 
-    //mmm no se yo...
     private String user, avatar, fullname;
 
     private String mensaje;
